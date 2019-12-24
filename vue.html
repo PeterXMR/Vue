@@ -9,29 +9,32 @@
 
 <div id="app">
   <div class="container">
-      <form v-show="!submitted" class="mt-5">
-          <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" v-model="email" class="form-control form-control-lg">
-          </div>
-          <button type="submit" @click.prevent="process" class="btn btn-primary">Submit</button>
-      </form>
-      <h2 v-show="sumbitted" v-cloak class="mt-5">Thanks for signing up!</h2>
+    <img :src="imgSrc" :title="imgTitle">
   </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
   var vm = new Vue({
     el: '#app',
     data: {
-      email: 'name.surname@example.com',
-      submitted: false
+        imgSrc: '',
+        imgTitle: ''
+    },
+    created: function(){
+        this.fetchApod();
     },
     methods: {
-      process: function() {
-        this.sumbitted = true;
+      fetchApod: function() {
+        var apiKey = 'gFo6x9MuD6If6zmwocS9DekFh7ttyYrnLADxJPGF';
+        var url = 'https://api.nasa.gov/planetary/apod?api_key=' + apiKey;
+        axios.get(url)
+            .then(function (res) {
+              vm.imgSrc = res.data.url;
+              vm.imgTitle = res.data.title;
+            }
+          );
       }
     }
   });
